@@ -22,6 +22,7 @@ type Config struct {
 	ExcludeDatabases []string            `yaml:"exclude_databases"`
 	ExcludeTables    map[string][]string `yaml:"exclude_tables"`
 	Keep             int                 `yaml:"keep"`
+	Cron             string              `yaml:"cron"`
 }
 
 // Read YAML configuration file
@@ -233,7 +234,6 @@ func performBackup(config *Config) {
 }
 
 func main() {
-	// Xử lý cờ dòng lệnh
 	runNow := flag.Bool("now", false, "Run the backup process immediately")
 	flag.Parse()
 
@@ -250,7 +250,7 @@ func main() {
 
 	c := cron.New()
 
-	_, err = c.AddFunc("0 2 * * *", func() {
+	_, err = c.AddFunc(config.Cron, func() {
 		performBackup(config)
 	})
 	if err != nil {
@@ -260,6 +260,5 @@ func main() {
 	log.Println("Backup scheduler started. Backup will run daily at 2:00 AM.")
 	c.Start()
 
-	// Giữ chương trình chạy mãi mãi
 	select {}
 }
