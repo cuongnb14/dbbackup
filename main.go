@@ -257,7 +257,7 @@ func main() {
 		log.Fatalf("Failed to schedule backup job: %v", err)
 	}
 
-	log.Println("Backup scheduler started. Backup will run daily at 2:00 AM.")
+	log.Println("Backup scheduler started with cron: " + config.Cron)
 	c.Start()
 
 	select {}
