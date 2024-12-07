@@ -1,0 +1,15 @@
+services:
+
+  backup:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backup
+    environment:
+      PG_HOST: devhost
+      PG_PORT: 5432
+      PG_USER: dev
+      PG_PASSWORD: dev
+      PG_SSLMODE: disable
+    volumes:
+      - ./backup:/backup
