@@ -1,10 +1,11 @@
 services:
 
-  backup:
+  dbbackup:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: backup
+    image: cuongnb14/db-backup:pg16-1.0
+    container_name: dbbackup
     environment:
       PG_HOST: devhost
       PG_PORT: 5432
@@ -13,3 +14,4 @@ services:
       PG_SSLMODE: disable
     volumes:
       - ./backup:/backup
+      - ./config.yaml:/app/config.yaml

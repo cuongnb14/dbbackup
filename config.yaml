@@ -1,0 +1,8 @@
+keep: 2
+
+exclude_databases:
+  - postgres
+
+exclude_tables:
+  demo:
+    - users
