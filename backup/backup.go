@@ -40,10 +40,18 @@ func PerformBackup(cfg *config.Config) {
 
 	for _, dbname := range databases {
 		backupDatabase(dbname, backupDir, cfg.ExcludeTables[dbname], host, port, user, password)
+		// break
 	}
 
 	zipFile := fmt.Sprintf("%s.zip", backupDir)
 	err = ZipFolder(backupDir, zipFile)
+
+	if cfg.EncryptKey != "" {
+		log.Printf("Encrypt backup file: %s", zipFile)
+		EncryptFile(zipFile, cfg.EncryptKey)
+		os.Remove(zipFile)
+	}
+
 	if err != nil {
 		log.Fatalf("Failed to zip backup directory: %v", err)
 	}
@@ -83,7 +91,18 @@ func isExcluded(name string, excludeList []string) bool {
 
 func backupDatabase(dbname, backupDir string, excludeTables []string, host, port, user, password string) {
 	backupFile := fmt.Sprintf("%s/%s.backup", backupDir, dbname)
-	cmd := exec.Command("pg_dump", "-h", host, "-p", port, "-U", user, "-F", "c", "-f", backupFile, dbname)
+	excludeOptions := ""
+	for _, table := range excludeTables {
+		excludeOptions += fmt.Sprintf("--exclude-table=%s ", table)
+	}
+
+	cmd := exec.Command("pg_dump", "-h", host, "-p", port, "-U", user, "-F", "c", "-f", backupFile)
+
+	if excludeOptions != "" {
+		cmd.Args = append(cmd.Args, excludeOptions)
+	}
+	cmd.Args = append(cmd.Args, dbname)
+
 	cmd.Env = append(os.Environ(), fmt.Sprintf("PGPASSWORD=%s", password))
 
 	log.Printf("Backing up database: %s", dbname)

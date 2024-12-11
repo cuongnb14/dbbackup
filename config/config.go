@@ -11,6 +11,7 @@ type Config struct {
 	ExcludeTables    map[string][]string `yaml:"exclude_tables"`
 	Keep             int                 `yaml:"keep"`
 	Cron             string              `yaml:"cron"`
+	EncryptKey       string              `yaml:"encrypt_key"`
 	RemoteBackup     struct {
 		AzureBlobStorage struct {
 			Enable bool   `yaml:"enable"`

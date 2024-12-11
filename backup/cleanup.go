@@ -9,7 +9,7 @@ import (
 )
 
 func CleanupOldBackups(backupDir string, keepCount int) {
-	files, err := filepath.Glob(filepath.Join(backupDir, "*.zip"))
+	files, err := filepath.Glob(filepath.Join(backupDir, "*"))
 	if err != nil {
 		log.Fatalf("Failed to list backup files: %v", err)
 	}

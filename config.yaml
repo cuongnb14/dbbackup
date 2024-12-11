@@ -1,5 +1,6 @@
 keep: 2
 cron: 0 0 * * *
+encrypt_key: abc 
 
 remote_backup:
   azure_blob_storage:
