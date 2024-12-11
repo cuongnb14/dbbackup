@@ -13,5 +13,5 @@ services:
       PG_PASSWORD: dev
       PG_SSLMODE: disable
     volumes:
-      - ./backup:/backup
+      - ./backup_data:/backup
       - ./config.yaml:/app/config.yaml

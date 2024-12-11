@@ -1,6 +1,11 @@
 keep: 2
 cron: 0 0 * * *
 
+remote_backup:
+  azure_blob_storage:
+    enable: false
+    sas: 
+
 # exclude_databases:
 #   - postgres
 
