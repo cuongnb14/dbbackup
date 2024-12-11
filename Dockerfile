@@ -17,6 +17,7 @@ RUN apk --no-cache add \
 
 WORKDIR /app
 
+COPY ./config.yaml ./
 COPY --from=builder /app/app /usr/bin/backup
 RUN chmod +x /usr/bin/backup
 RUN mkdir -p /backup

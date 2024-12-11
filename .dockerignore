@@ -1,2 +1,4 @@
 backup_data/
 .DS_Store
+docker-compose.yml
+README.md
