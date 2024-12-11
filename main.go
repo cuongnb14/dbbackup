@@ -122,6 +122,8 @@ func cleanupOldBackups(backupDir string, keepCount int) error {
 }
 
 func performBackup(config *Config) {
+	start := time.Now()
+
 	// Load configuration from YAML
 
 	host := os.Getenv("PG_HOST")
@@ -231,6 +233,8 @@ func performBackup(config *Config) {
 		log.Fatalf("Failed to cleanup old backups: %v", err)
 	}
 
+	elapsed := time.Since(start)
+	fmt.Printf("Execution time: %s\n", elapsed)
 }
 
 func main() {
