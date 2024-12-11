@@ -12,6 +12,13 @@ services:
       PG_USER: dev
       PG_PASSWORD: dev
       PG_SSLMODE: disable
+
+      ENCRYPT_KEY: "abc"
+
+      ABS_URL: 
+      ABS_CONTAINER: 
+      ABS_SAS:
+
     volumes:
       - ./backup_data:/backup
       - ./config.yaml:/app/config.yaml

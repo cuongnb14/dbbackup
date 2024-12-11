@@ -44,12 +44,19 @@ func PerformBackup(cfg *config.Config) {
 	}
 
 	zipFile := fmt.Sprintf("%s.zip", backupDir)
+	finalBackupFile := zipFile
 	err = ZipFolder(backupDir, zipFile)
 
-	if cfg.EncryptKey != "" {
+	encryptKey := os.Getenv("ENCRYPT_KEY")
+	if encryptKey != "" {
 		log.Printf("Encrypt backup file: %s", zipFile)
-		EncryptFile(zipFile, cfg.EncryptKey)
+		EncryptFile(zipFile, encryptKey)
 		os.Remove(zipFile)
+		finalBackupFile = zipFile + ".gpg"
+	}
+
+	if cfg.RemoteBackup.AzureBlobStorage.Enable {
+		UploadToABS(finalBackupFile)
 	}
 
 	if err != nil {

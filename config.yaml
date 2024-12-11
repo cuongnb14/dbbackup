@@ -4,8 +4,7 @@ encrypt_key: abc
 
 remote_backup:
   azure_blob_storage:
-    enable: false
-    sas: 
+    enable: true
 
 # exclude_databases:
 #   - postgres
