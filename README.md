@@ -16,3 +16,9 @@ ABS_URL: abs url
 ABS_CONTAINER: abs container
 ABS_SAS: abs token
 ```
+
+# Run now
+
+```sh
+docker exec -it dbbackup backup --now
+```
