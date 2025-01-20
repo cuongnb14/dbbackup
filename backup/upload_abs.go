@@ -10,11 +10,27 @@ import (
 )
 
 func UploadToABS(filePath string) {
-	absUrl := os.Getenv("ABS_URL")
+	// Load environment variables
+	accountName := os.Getenv("ABS_ACCOUNT_NAME")
+	accountKey := os.Getenv("ABS_ACCESS_KEY")
 	absContainer := os.Getenv("ABS_CONTAINER")
-	absSAS := os.Getenv("ABS_SAS")
 
-	sasURL := fmt.Sprintf("%s?%s", absUrl, absSAS)
+	if accountName == "" || accountKey == "" || absContainer == "" {
+		log.Fatal("Missing required environment variables: ABS_ACCOUNT_NAME, ABS_ACCESS_KEY, or ABS_CONTAINER")
+	}
+
+	// Create a shared key credential
+	cred, err := azblob.NewSharedKeyCredential(accountName, accountKey)
+	if err != nil {
+		log.Fatalf("Failed to create shared key credential: %v", err)
+	}
+
+	// Create a blob service client
+	serviceURL := fmt.Sprintf("https://%s.blob.core.windows.net/", accountName)
+	client, err := azblob.NewClientWithSharedKeyCredential(serviceURL, cred, nil)
+	if err != nil {
+		log.Fatalf("Failed to create Azure Blob Storage client: %v", err)
+	}
 
 	// Read the file
 	fileData, err := os.ReadFile(filePath)
@@ -22,16 +38,14 @@ func UploadToABS(filePath string) {
 		log.Fatalf("Failed to read file: %v", err)
 	}
 
-	// Create a BlobClient
-	client, err := azblob.NewClientWithNoCredential(sasURL, nil)
-	if err != nil {
-		log.Fatal("failed to create abs client: ", "err", err)
-	}
+	// Generate blob name (using filePath's name for example)
+	blobName := "databases/" + filePath
+
 	// Upload the file
-	_, err = client.UploadBuffer(context.Background(), absContainer, "databases"+filePath, fileData, nil)
+	_, err = client.UploadBuffer(context.Background(), absContainer, blobName, fileData, nil)
 	if err != nil {
-		log.Fatal("upload buffer to abs failed: ", "err", err)
+		log.Fatalf("Upload buffer to Azure Blob Storage failed: %v", err)
 	}
 
-	log.Printf("File uploaded successfully!")
+	log.Printf("File uploaded successfully to Azure Blob Storage: %s", blobName)
 }
